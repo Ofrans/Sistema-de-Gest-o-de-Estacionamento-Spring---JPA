@@ -34,6 +34,7 @@ public class UserController {
         return ResponseEntity.ok(user1);
     }
 
+    // Lista todos os users
     @GetMapping
     public ResponseEntity <List<User>> getAll(){
         List<User> user1 =  userService.searchAll();
