@@ -3,6 +3,7 @@ package com.compasso.demo_park_api.web.controller;
 import com.compasso.demo_park_api.entity.User;
 import com.compasso.demo_park_api.service.UserService;
 import com.compasso.demo_park_api.web.dto.UserCreateDTO;
+import com.compasso.demo_park_api.web.dto.UserPasswordDto;
 import com.compasso.demo_park_api.web.dto.UserResponseDto;
 import com.compasso.demo_park_api.web.dto.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +33,9 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody User user){
-        User user1 =  userService.editPassword(id,user.getPassword());
-        return ResponseEntity.ok(user1);
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDto dto){
+        User user1 =  userService.editPassword(id, dto.getCurrentPassword(), dto.getNewPassword(), dto.getConfirmPassword());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

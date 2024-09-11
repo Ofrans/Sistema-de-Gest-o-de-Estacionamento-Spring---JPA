@@ -28,9 +28,17 @@ public class UserService {
     }
 
     @Transactional
-    public User editPassword(Long id, String password) {
+    public User editPassword(Long id, String currentPassword, String newPassword, String confirmPassword) {
+        if (!newPassword.equals(confirmPassword)){
+            throw new RuntimeException("Passwords do not match.");
+        }
+
         User user = searchById(id);
-        user.setPassword(password);
+        if(!user.getPassword().equals(currentPassword)){
+            throw new RuntimeException("Your password do not match.");
+        }
+
+        user.setPassword(newPassword);
         return user;
     }
 
