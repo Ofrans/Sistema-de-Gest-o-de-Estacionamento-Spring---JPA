@@ -13,6 +13,6 @@ public class UserCreateDTO {
     private String username;
 
     @NotBlank
-    @Size(min = 6, max = 6)
+    @Size(message = "Size must be between 6 and 6", min = 6, max = 6)
     private String password;
 }
