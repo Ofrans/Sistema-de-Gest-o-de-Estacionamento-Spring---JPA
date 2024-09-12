@@ -35,7 +35,7 @@ public class UserController {
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
                     @ApiResponse(responseCode = "409", description = "User and email already registered",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-                            @ApiResponse(responseCode = "422", description = "Recurso não processado por dados de entrada inválidos",
+                            @ApiResponse(responseCode = "422", description = "Resource not processed due to invalid input data",
                                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @PostMapping
@@ -44,6 +44,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user1));
     }
 
+    @Operation(summary = "Retrieve a user by id", description = "Retrieve a user by id",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Resource retrieved successfully",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Resource not found",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getById(@PathVariable Long id){
         User user1 =  userService.searchById(id);
