@@ -24,7 +24,7 @@ public class UserIT {
                 .post()
                 .uri("api/v1/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UserCreateDTO("enrico@gmail.com", "123456"))
+                .bodyValue(new UserCreateDTO("memphisdepay@gmail.com", "123456"))
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(UserResponseDto.class)
@@ -120,5 +120,21 @@ public class UserIT {
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 
+    }
+
+    @Test
+    public void createUser_WithUsernameRepeated_ReturnErrorMessageStatus409(){
+        ErrorMessage responseBody = testClient
+                .post()
+                .uri("api/v1/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserCreateDTO("mamoa@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(409)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(409);
     }
 }
