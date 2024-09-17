@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -22,6 +22,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     public JwtToken getTokenAuthenticated(String username){
         User.Role role = userService.findRoleByUsername(username);
-        return JwtUtils.createToken(username,role.name().substring("ROLE_".length()));
+        return JwtUtils.createToken(username, role.name().substring("ROLE_".length()));
     }
 }

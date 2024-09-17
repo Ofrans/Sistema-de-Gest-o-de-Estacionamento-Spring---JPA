@@ -5,6 +5,7 @@ import com.compasso.demo_park_api.exception.EntityNotFoundException;
 import com.compasso.demo_park_api.exception.PasswordInvalidException;
 import com.compasso.demo_park_api.exception.UsernameUniqueViolationException;
 import com.compasso.demo_park_api.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ public class UserService {
 
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public User save(User user) {
         try{
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         }catch(org.springframework.dao.DataIntegrityViolationException e) {
             throw new UsernameUniqueViolationException(String.format("Username {%s} already exists", user.getUsername()));
@@ -41,7 +44,7 @@ public class UserService {
         }
 
         User user = searchById(id);
-        if(!user.getPassword().equals(currentPassword)){
+        if(!passwordEncoder.matches(currentPassword, user.getPassword())){
             throw new PasswordInvalidException("New password do not match");
         }
 
@@ -56,7 +59,7 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with 'username' not found.", username))
+                () -> new EntityNotFoundException(String.format("User with '%s' not found.", username))
         );
     }
 

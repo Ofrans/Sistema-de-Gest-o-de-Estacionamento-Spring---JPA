@@ -1,7 +1,5 @@
 package com.compasso.demo_park_api.jwt;
 
-
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
