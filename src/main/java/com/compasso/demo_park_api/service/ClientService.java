@@ -15,7 +15,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
 
     @Transactional
-    public Client salvar(Client client) {
+    public Client save(Client client) {
         try {
             return clientRepository.save(client);
         } catch (DataIntegrityViolationException e) {
