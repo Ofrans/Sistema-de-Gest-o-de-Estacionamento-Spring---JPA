@@ -19,12 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Usuários", description = "Contains all operations related to the resources for registering, editing and reading a user.")
+@Tag(name = "Users", description = "Contains all operations related to the resources for registering, editing and reading a user.")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")

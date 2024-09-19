@@ -4,7 +4,13 @@ package com.compasso.demo_park_api.web.controller;
 import com.compasso.demo_park_api.jwt.JwtToken;
 import com.compasso.demo_park_api.jwt.JwtUserDetailsService;
 import com.compasso.demo_park_api.web.dto.UserLoginDto;
+import com.compasso.demo_park_api.web.dto.UserResponseDto;
 import com.compasso.demo_park_api.web.exception.ErrorMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "Authentication", description = "Resource to proceed with API authentication")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -28,6 +35,15 @@ public class AutenticationController {
     private final JwtUserDetailsService detailsService;
     private final AuthenticationManager authenticationManager;
 
+    @Operation(summary = "Authenticate to API", description = "API authentication feature",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful authentication and return of a bearer token",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid credentials",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "422", description = "Invalid(s) Field(s)",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @PostMapping("/auth")
     public ResponseEntity<?> authenticate(@RequestBody @Valid UserLoginDto dto, HttpServletRequest request) {
         log.info("Login authentication process {}", dto.getUsername() );

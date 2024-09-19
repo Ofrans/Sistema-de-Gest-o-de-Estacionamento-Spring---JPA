@@ -274,6 +274,7 @@ public class UserIT {
         ErrorMessage responseBody = testClient
                 .patch()
                 .uri("api/v1/users/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UserPasswordDto("", "",""))
                 .exchange()
@@ -287,6 +288,7 @@ public class UserIT {
         testClient
                 .patch()
                 .uri("api/v1/users/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UserPasswordDto("12345", "78945","78945"))
                 .exchange()
@@ -300,6 +302,7 @@ public class UserIT {
         testClient
                 .patch()
                 .uri("api/v1/users/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UserPasswordDto("1234567", "7894567","7894567"))
                 .exchange()
@@ -316,6 +319,7 @@ public class UserIT {
         ErrorMessage responseBody = testClient
                 .patch()
                 .uri("api/v1/users/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UserPasswordDto("123456", "123124","789456"))
                 .exchange()
@@ -329,6 +333,7 @@ public class UserIT {
         testClient
                 .patch()
                 .uri("api/v1/users/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UserPasswordDto("000000", "789456","789456"))
                 .exchange()
@@ -354,5 +359,35 @@ public class UserIT {
         org.assertj.core.api.Assertions.assertThat(userResponseDtoList).isNotNull();
         org.assertj.core.api.Assertions.assertThat(userResponseDtoList).isNotEmpty();
         org.assertj.core.api.Assertions.assertThat(userResponseDtoList).size().isEqualTo(3);
+    }
+
+    @Test
+    public void listarUsers_WithPermissionUser_ReturnStatus200() {
+        List<UserResponseDto> responseBody = testClient
+                .get()
+                .uri("/api/v1/users")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void listUsers_WithNotPermissionUser_RetornarErrorMessageStatus403() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
     }
 }
